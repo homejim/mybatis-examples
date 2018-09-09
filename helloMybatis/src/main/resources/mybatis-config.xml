@@ -21,7 +21,7 @@
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
                 <property name="url" value="jdbc:mysql://localhost:3306/mybatis"/>
                 <property name="username" value="root"/>
-                <property name="password" value="jim666"/>
+                <property name="password" value="jim777"/>
             </dataSource>
         </environment>
     </environments>
