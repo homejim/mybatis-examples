@@ -20,8 +20,10 @@
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
                 <property name="url" value="jdbc:mysql://localhost:3306/mybatis"/>
+                <!--填写你的数据库用户名-->
                 <property name="username" value="root"/>
-                <property name="password" value="jim666"/>
+                <!--填写你的数据库密码-->
+                <property name="password" value="你的密码"/>
             </dataSource>
         </environment>
     </environments>
