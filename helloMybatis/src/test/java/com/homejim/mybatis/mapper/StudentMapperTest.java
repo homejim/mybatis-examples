@@ -10,7 +10,10 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA
@@ -48,5 +51,67 @@ public class StudentMapperTest {
                 sqlSession.close();
             }
         }
+    }
+
+    @Test
+    public void testSelectBtweenCreatedTimeMap() {
+
+        Map<String, Object> params = new HashMap<>();
+        Calendar bTime = Calendar.getInstance();
+        // month 是从0~11， 所以9月是8
+        bTime.set(2018, Calendar.AUGUST, 29);
+        params.put("bTime", bTime.getTime());
+
+        Calendar eTime = Calendar.getInstance();
+        eTime.set(2018,Calendar.SEPTEMBER,2);
+        params.put("eTime", eTime.getTime());
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = sqlSessionFactory.openSession();
+
+            StudentMapper studentMapper = (StudentMapper) sqlSession.getMapper(StudentMapper.class);
+            List<Student> students = studentMapper.selectBetweenCreatedTime(params);
+            for (int i = 0; i < students.size(); i++) {
+                System.out.println(students.get(i));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+
+    }
+
+    @Test
+    public void testSelectBtweenCreatedTimeAnno() {
+
+        Map<String, Object> params = new HashMap<>();
+        Calendar bTime = Calendar.getInstance();
+        // month 是从0~11， 所以9月是8
+        bTime.set(2018, Calendar.AUGUST, 29);
+
+
+        Calendar eTime = Calendar.getInstance();
+        eTime.set(2018,Calendar.SEPTEMBER,2);
+
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = sqlSessionFactory.openSession();
+
+            StudentMapper studentMapper = (StudentMapper) sqlSession.getMapper(StudentMapper.class);
+            List<Student> students = studentMapper.selectBetweenCreatedTimeAnno(bTime.getTime(), eTime.getTime());
+            for (int i = 0; i < students.size(); i++) {
+                System.out.println(students.get(i));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+
     }
 }
