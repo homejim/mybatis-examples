@@ -43,6 +43,14 @@
     from post
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectPostByBlogId" parameterType="java.util.Map" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from post
+    where blog_id = #{blogId,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     <!--
       WARNING - @mbg.generated

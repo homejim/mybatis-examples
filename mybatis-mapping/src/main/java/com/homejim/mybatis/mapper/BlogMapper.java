@@ -3,6 +3,9 @@ package com.homejim.mybatis.mapper;
 import com.homejim.mybatis.entity.Blog;
 import com.homejim.mybatis.entity.BlogBO;
 import com.homejim.mybatis.entity.BlogCustom;
+import com.homejim.mybatis.entity.BlogPostBO;
+
+import java.util.List;
 
 public interface BlogMapper {
     /**
@@ -86,4 +89,16 @@ public interface BlogMapper {
      * @return
      */
     BlogCustom selectBlogAndAuthorByIdSelect(int id);
+
+    /**
+     * 获取博客及其发布的文章内容 一对多
+     * @return
+     */
+    List<BlogPostBO> selectBlogAndPostList();
+
+    /**
+     * 获取博客及其发布的文章内容 一对多:延迟加载
+     * @return
+     */
+    List<BlogPostBO> selectBlogAndPostListLazy();
 }

@@ -28,7 +28,7 @@
     from author
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectById" parameterType="java.util.Map" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from author

@@ -2,6 +2,8 @@ package com.mybatis.homejim.mapper;
 
 import com.homejim.mybatis.entity.BlogBO;
 import com.homejim.mybatis.entity.BlogCustom;
+import com.homejim.mybatis.entity.BlogPostBO;
+import com.homejim.mybatis.entity.Post;
 import com.homejim.mybatis.mapper.BlogMapper;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -15,6 +17,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.List;
 
 public class BlogMapperTest {
     private static SqlSessionFactory sqlSessionFactory;
@@ -116,5 +119,49 @@ public class BlogMapperTest {
         System.out.println("开始使用author对象");
         Assert.assertNotNull(blogCustom.getAuthor());
 
+    }
+    /**
+     *  resultMap + collection 一对多映射
+     */
+    @Test
+    public void testSelectBlogAndPostListByBlog() {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        BlogMapper blogMapper = sqlSession.getMapper(BlogMapper.class);
+        List<BlogPostBO> blogPostBOs = blogMapper.selectBlogAndPostList();
+
+        sqlSession.close();
+
+        for (int i = 0; i < blogPostBOs.size(); i++) {
+            BlogPostBO blogPostBO = blogPostBOs.get(i);
+            System.out.println(blogPostBO.getTitle());
+
+            for (int j = 0; j < blogPostBO.getPosts().size(); j++) {
+                System.out.println(blogPostBO.getPosts().get(j).getContent());
+            }
+
+            System.out.println("=============这是对象分割线===============");
+        }
+    }
+
+    /**
+     *  resultMap + collection 一对多映射, 嵌套查询
+     */
+    @Test
+    public void testSelectBlogAndPostListByBlogLazy() {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        BlogMapper blogMapper = sqlSession.getMapper(BlogMapper.class);
+        List<BlogPostBO> blogPostBOs = blogMapper.selectBlogAndPostListLazy();
+
+        for (int i = 0; i < blogPostBOs.size(); i++) {
+            BlogPostBO blogPostBO = blogPostBOs.get(i);
+            System.out.println(blogPostBO.getTitle());
+            List<Post> posts = blogPostBO.getPosts();
+
+            for (int j = 0; j < posts.size(); j++) {
+                System.out.println(blogPostBO.getPosts().get(j).getContent());
+            }
+
+            System.out.println("=============这是对象分割线===============");
+        }
     }
 }
