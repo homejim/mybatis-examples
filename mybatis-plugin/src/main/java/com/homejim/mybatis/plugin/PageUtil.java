@@ -1,11 +1,7 @@
 package com.homejim.mybatis.plugin;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
- * @author hejiajin hejiajin@3vjia.com
- * @since 2019-09-27 13:07
+ * @author homejim
  */
 public class PageUtil {
     private static final ThreadLocal<Page> LOCAL_PAGE = new ThreadLocal<Page>();
@@ -23,11 +19,4 @@ public class PageUtil {
         return LOCAL_PAGE.get();
     }
 
-    @AllArgsConstructor
-    @Getter
-    static class Page {
-        private int offset;
-        private int limit;
-
-    }
 }

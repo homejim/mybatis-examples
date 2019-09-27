@@ -1,5 +1,6 @@
 package com.homejim.mybatis.plugin;
 
+import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
@@ -18,7 +19,6 @@ import java.util.Properties;
  * 分页插件
  *
  * @author homejim
- * @since 2019-09-27 12:24
  */
 @Intercepts({
         @Signature(
@@ -44,7 +44,8 @@ public class PageInterceptor implements Interceptor {
         final MappedStatement ms = (MappedStatement) queryArgs[MAPPEDSTATEMENT_INDEX];
         final Object parameter = queryArgs[PARAMETER_INDEX];
 
-        PageUtil.Page paingParam = PageUtil.getPaingParam();
+        //  获取分页参数
+        Page paingParam = PageUtil.getPaingParam();
         if (paingParam != null) {
 
             // 构造新的 sql, select xxx from xxx where yyy limit offset,limit
@@ -67,6 +68,7 @@ public class PageInterceptor implements Interceptor {
 
     @Override
     public Object plugin(Object o) {
+        // 使用 mybatis 提供的帮助类进行代理类的封装
         return Plugin.wrap(o, this);
     }
 
@@ -84,31 +86,25 @@ public class PageInterceptor implements Interceptor {
     private MappedStatement newMappedStatement(MappedStatement ms, BoundSql newBoundSql) {
         MappedStatement.Builder builder = new MappedStatement.Builder(ms.getConfiguration(), ms.getId(),
                 new BoundSqlSqlSource(newBoundSql), ms.getSqlCommandType());
-        builder.useCache(ms.isUseCache());
-        builder.cache(ms.getCache());
-        builder.databaseId(ms.getDatabaseId());
-        builder.fetchSize(ms.getFetchSize());
-        builder.flushCacheRequired(ms.isFlushCacheRequired());
-
         builder.keyColumn(delimitedArrayToString(ms.getKeyColumns()));
         builder.keyGenerator(ms.getKeyGenerator());
         builder.keyProperty(delimitedArrayToString(ms.getKeyProperties()));
-
         builder.lang(ms.getLang());
         builder.resource(ms.getResource());
-
         builder.parameterMap(ms.getParameterMap());
         builder.resultMaps(ms.getResultMaps());
         builder.resultOrdered(ms.isResultOrdered());
         builder.resultSets(delimitedArrayToString(ms.getResultSets()));
         builder.resultSetType(ms.getResultSetType());
-
         builder.timeout(ms.getTimeout());
         builder.statementType(ms.getStatementType());
+        builder.useCache(ms.isUseCache());
+        builder.cache(ms.getCache());
+        builder.databaseId(ms.getDatabaseId());
+        builder.fetchSize(ms.getFetchSize());
+        builder.flushCacheRequired(ms.isFlushCacheRequired());
         return builder.build();
     }
-
-
 
     public String getPagingSql(String sql, int offset, int limit) {
         StringBuilder result = new StringBuilder(sql.length() + 100);
@@ -123,16 +119,11 @@ public class PageInterceptor implements Interceptor {
     }
 
     public String delimitedArrayToString(String[] array) {
-        String result = "";
+
         if (array == null || array.length == 0) {
-            return result;
+            return "";
         }
-        for (int i = 0; i < array.length; i++) {
-            result += array[i];
-            if (i != array.length - 1) {
-                result += ",";
-            }
-        }
-        return result;
+        Joiner joiner = Joiner.on(",");
+        return joiner.join(array);
     }
 }
