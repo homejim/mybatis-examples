@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.homejim.mybatis.mapper.StudentMapper">
+
+  <resultMap id="BaseResultMap" type="com.homejim.mybatis.entity.Student">
+    <id column="student_id" jdbcType="INTEGER" property="studentId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="sex" jdbcType="TINYINT" property="sex" />
+    <result column="locked" jdbcType="TINYINT" property="locked" />
+    <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    student_id, name, phone, email, sex, locked, gmt_created, gmt_modified
+  </sql>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from student
+  </select>
+  <select id="selectByPrimaryKey" flushCache="true" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from student
+    where student_id=#{student_id, jdbcType=INTEGER}
+  </select>
+  <select id="selectBetweenCreatedTime" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from student
+    where gmt_created &gt; #{bTime, jdbcType=TIMESTAMP} and gmt_created &lt; #{eTime, jdbcType=TIMESTAMP}
+  </select>
+  <select id="selectBetweenCreatedTimeAnno" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from student
+    where gmt_created &gt; #{bTime, jdbcType=TIMESTAMP} and gmt_created &lt; #{eTime, jdbcType=TIMESTAMP}
+  </select>
+  <update id="updateByPrimaryKey"  parameterType="com.homejim.mybatis.entity.Student">
+    update student
+    set
+    name=#{name, jdbcType=VARCHAR}, phone=#{phone, jdbcType=VARCHAR}, email=#{email, jdbcType=VARCHAR},
+    sex=#{sex, jdbcType=VARCHAR}, locked=#{locked, jdbcType=VARCHAR}
+    where student_id=#{studentId, jdbcType=INTEGER}
+  </update>
+</mapper>
